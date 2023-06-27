@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: riot_back
+    ports:
+      - '8787:80'
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+
+  db:
+    image: postgres:15
+    container_name: db_riot
+    restart: always
+    environment:
+      POSTGRES_DB: RIOT
+      POSTGRES_USER: riot
+      POSTGRES_PASSWORD: riot
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
