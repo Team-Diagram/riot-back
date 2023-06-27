@@ -25,7 +25,7 @@ class Planning
 
     #[ORM\ManyToOne(inversedBy: 'plannings')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Place $placeId = null;
+    private ?Place $place = null;
 
     public function getId(): ?Uuid
     {
@@ -56,14 +56,14 @@ class Planning
         return $this;
     }
 
-    public function getPlaceId(): ?Place
+    public function getPlace(): ?Place
     {
-        return $this->placeId;
+        return $this->place;
     }
 
-    public function setPlaceId(?Place $placeId): self
+    public function setPlace(?Place $place): self
     {
-        $this->placeId = $placeId;
+        $this->place = $place;
 
         return $this;
     }
