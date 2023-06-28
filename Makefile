@@ -1,4 +1,4 @@
-CONTAINER_PATH:=/var/www/app
+CONTAINER_PATH:=/var/www
 DOCKER_COMPOSE:=docker compose
 UP:=up -d --build
 DOWN:=stop
