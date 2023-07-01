@@ -13,10 +13,21 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        token:
+            pattern: '^/token'
+            stateless: true
+            provider: 'app_user_provider'
+            custom_authenticator:
+                - App\Security\TokenAuthenticator
         main:
             lazy: true
             provider: app_user_provider
-
+            custom_authenticator:
+                - App\Security\UserAuthenticator
+                - App\Security\TokenAuthenticator
+            logout:
+                path: app_lougout
+                
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -28,6 +39,7 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        # - { path: ^/test, roles: ROLE_ADMIN }
 
 when@test:
     security:
