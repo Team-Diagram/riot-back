@@ -24,7 +24,7 @@ class UserController extends AbstractController
      * @param UserPasswordHasherInterface $passwordHasher
      * @return JsonResponse
      */
-    #[Route('/user', name:'add_user', methods:['POST'])]
+    #[Route('/user', name:'add_user', methods:['PUT'])]
     public function create(
         Request $request,
         UserRepository $userRepository,
@@ -38,6 +38,7 @@ class UserController extends AbstractController
         $user->setLastName($data['last_name']);
         $user->setEmail($data['email']);
         $user->setAdmin($data['admin']);
+        $data['admin'] ? $user->setRoles(['ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
 
         $hashedPassword = $passwordHasher->hashPassword(
             $user,
@@ -53,7 +54,7 @@ class UserController extends AbstractController
             ]);
         }catch(\Exception $e){
                 return $this->json([
-                'message' => $e,
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -95,5 +96,91 @@ class UserController extends AbstractController
         }
 
         return new JsonResponse($serializedUser);
+    }
+    
+    /**
+     * 
+     * @return JsonResponse
+     */
+    #[Route('/protectedRoute/example', name:'protected_route_example', methods:['GET'])]
+    public function protectedRouteExample(): JsonResponse
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        return new JsonResponse(['message' => 'test']);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @return JsonResponse
+     */
+    #[Route('/user/by', name:'get_admin_user', methods:['GET'])]
+    public function getByAdmin(Request $request,UserRepository $userRepository): JsonResponse
+    {   
+
+        $key = $request->query->keys()[0];
+        $value = $request->query->get($key);
+
+        $adminUsers = $userRepository->findBy([$key => $value]);
+
+        if (empty($adminUsers)) {
+            return new JsonResponse(['error' => 'No users found'], 404);
+        }
+        
+        $serializedUser = [];
+
+        foreach ($adminUsers as $user) {
+            $serializedUser[] = $user->jsonSerialize();
+        }
+
+        return new JsonResponse($serializedUser);
+    }
+
+    /**
+     * @param Uuid $id
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return JsonResponse
+     */
+
+    #[Route('/user/update/{id}', name:'update_user', methods:['PUT'])]
+    public function updateUser(Uuid $id,Request $request,UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {   
+        $user = $userRepository->find($id);
+        $data = json_decode($request->getContent(), true);
+    
+        foreach ($data as $field => $value) {
+            if ($field === 'password') {
+                $hashedPassword = $passwordHasher->hashPassword($user, $value);
+                $user->setPassword($hashedPassword);
+            } else {
+                $setterMethod = 'set' . str_replace('_', '', ucwords($field, '_'));
+                if (method_exists($user, $setterMethod)) {
+                    $user->$setterMethod($value);
+                }
+            }
+        }
+    
+        $userRepository->save($user, true);
+    
+        return new JsonResponse(['status' => 'user updated!']);
+    }
+
+
+     /**
+     * @param Uuid $id
+     * @param UserRepository $userRepository
+     * @return JsonResponse
+     */
+    #[Route('/user/delete/{id}', name:'delete_user', methods:['DELETE'])]
+    public function deleteUser(Uuid $id,UserRepository $userRepository): JsonResponse
+    {   
+        $user = $userRepository->find($id);
+        $userRepository->remove($user, true);
+    
+        return new JsonResponse(['status' => 'user deleted']);
     }
 }
