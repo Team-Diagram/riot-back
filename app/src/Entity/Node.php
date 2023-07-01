@@ -22,15 +22,15 @@ class Node
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'nodes')]
-    private ?Place $placeId = null;
+    private ?Place $place = null;
 
     #[ORM\ManyToOne(inversedBy: 'nodes')]
-    private ?Group $groupId = null;
+    private ?Group $group = null;
 
-    #[ORM\OneToMany(mappedBy: 'nodeId', targetEntity: Measure::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'node', targetEntity: Measure::class, orphanRemoval: true)]
     private Collection $measures;
 
-    #[ORM\OneToMany(mappedBy: 'nodeId', targetEntity: NodeMeta::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'node', targetEntity: NodeMeta::class, orphanRemoval: true)]
     private Collection $nodeMetas;
 
     public function __construct()
@@ -56,26 +56,26 @@ class Node
         return $this;
     }
 
-    public function getPlaceId(): ?Place
+    public function getPlace(): ?Place
     {
-        return $this->placeId;
+        return $this->place;
     }
 
-    public function setPlaceId(?Place $placeId): self
+    public function setPlace(?Place $place): self
     {
-        $this->placeId = $placeId;
+        $this->place = $place;
 
         return $this;
     }
 
-    public function getGroupId(): ?Group
+    public function getGroup(): ?Group
     {
-        return $this->groupId;
+        return $this->group;
     }
 
-    public function setGroupId(?Group $groupId): self
+    public function setGroup(?Group $group): self
     {
-        $this->groupId = $groupId;
+        $this->group = $group;
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Node
     {
         if (!$this->measures->contains($measure)) {
             $this->measures->add($measure);
-            $measure->setNodeId($this);
+            $measure->setNode($this);
         }
 
         return $this;
@@ -102,8 +102,8 @@ class Node
     {
         if ($this->measures->removeElement($measure)) {
             // set the owning side to null (unless already changed)
-            if ($measure->getNodeId() === $this) {
-                $measure->setNodeId(null);
+            if ($measure->getNode() === $this) {
+                $measure->setNode(null);
             }
         }
 
@@ -122,7 +122,7 @@ class Node
     {
         if (!$this->nodeMetas->contains($nodeMeta)) {
             $this->nodeMetas->add($nodeMeta);
-            $nodeMeta->setNodeId($this);
+            $nodeMeta->setNode($this);
         }
 
         return $this;
@@ -132,8 +132,8 @@ class Node
     {
         if ($this->nodeMetas->removeElement($nodeMeta)) {
             // set the owning side to null (unless already changed)
-            if ($nodeMeta->getNodeId() === $this) {
-                $nodeMeta->setNodeId(null);
+            if ($nodeMeta->getNode() === $this) {
+                $nodeMeta->setNode(null);
             }
         }
 

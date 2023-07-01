@@ -28,7 +28,7 @@ class Measure
 
     #[ORM\ManyToOne(inversedBy: 'measures')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Node $nodeId = null;
+    private ?Node $node = null;
 
     public function getId(): ?Uuid
     {
@@ -71,14 +71,14 @@ class Measure
         return $this;
     }
 
-    public function getNodeId(): ?Node
+    public function getNode(): ?Node
     {
-        return $this->nodeId;
+        return $this->node;
     }
 
-    public function setNodeId(?Node $nodeId): self
+    public function setNode(?Node $node): self
     {
-        $this->nodeId = $nodeId;
+        $this->node = $node;
 
         return $this;
     }

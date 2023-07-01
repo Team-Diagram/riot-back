@@ -24,7 +24,7 @@ class NodeMeta
 
     #[ORM\ManyToOne(inversedBy: 'nodeMetas')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Node $nodeId = null;
+    private ?Node $node = null;
 
     public function getId(): ?Uuid
     {
@@ -55,14 +55,14 @@ class NodeMeta
         return $this;
     }
 
-    public function getNodeId(): ?Node
+    public function getNode(): ?Node
     {
-        return $this->nodeId;
+        return $this->node;
     }
 
-    public function setNodeId(?Node $nodeId): self
+    public function setNodeId(?Node $node): self
     {
-        $this->nodeId = $nodeId;
+        $this->node = $node;
 
         return $this;
     }

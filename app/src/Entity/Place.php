@@ -24,10 +24,10 @@ class Place
     #[ORM\Column]
     private ?int $peopleCount = null;
 
-    #[ORM\OneToMany(mappedBy: 'placeId', targetEntity: Planning::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: Planning::class, orphanRemoval: true)]
     private Collection $plannings;
 
-    #[ORM\OneToMany(mappedBy: 'placeId', targetEntity: Node::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: Node::class, orphanRemoval: true)]
     private Collection $nodes;
 
     public function __construct()
@@ -77,7 +77,7 @@ class Place
     {
         if (!$this->plannings->contains($planning)) {
             $this->plannings->add($planning);
-            $planning->setPlaceId($this);
+            $planning->setPlace($this);
         }
 
         return $this;
@@ -87,8 +87,8 @@ class Place
     {
         if ($this->plannings->removeElement($planning)) {
             // set the owning side to null (unless already changed)
-            if ($planning->getPlaceId() === $this) {
-                $planning->setPlaceId(null);
+            if ($planning->getPlace() === $this) {
+                $planning->setPlace(null);
             }
         }
 
@@ -107,7 +107,7 @@ class Place
     {
         if (!$this->nodes->contains($node)) {
             $this->nodes->add($node);
-            $node->setPlaceId($this);
+            $node->setPlace($this);
         }
 
         return $this;
@@ -117,8 +117,8 @@ class Place
     {
         if ($this->nodes->removeElement($node)) {
             // set the owning side to null (unless already changed)
-            if ($node->getPlaceId() === $this) {
-                $node->setPlaceId(null);
+            if ($node->getPlace() === $this) {
+                $node->setPlace(null);
             }
         }
 
