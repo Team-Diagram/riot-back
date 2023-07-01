@@ -30,6 +30,18 @@ class Place
     #[ORM\OneToMany(mappedBy: 'place', targetEntity: Node::class, orphanRemoval: true)]
     private Collection $nodes;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $light_state = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $warm_state = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $clim_state = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
+
     public function __construct()
     {
         $this->plannings = new ArrayCollection();
@@ -121,6 +133,54 @@ class Place
                 $node->setPlace(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isLightState(): ?bool
+    {
+        return $this->light_state;
+    }
+
+    public function setLightState(?bool $light_state): self
+    {
+        $this->light_state = $light_state;
+
+        return $this;
+    }
+
+    public function isWarmState(): ?bool
+    {
+        return $this->warm_state;
+    }
+
+    public function setWarmState(?bool $warm_state): self
+    {
+        $this->warm_state = $warm_state;
+
+        return $this;
+    }
+
+    public function isClimState(): ?bool
+    {
+        return $this->clim_state;
+    }
+
+    public function setClimState(?bool $clim_state): self
+    {
+        $this->clim_state = $clim_state;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
