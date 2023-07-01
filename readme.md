@@ -9,4 +9,5 @@
 
 ## Run docker run !!!
 `make init` <br>
-`make migrate`
+`make migrate` <br>
+`make insert-data`
