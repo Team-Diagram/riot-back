@@ -61,7 +61,7 @@ entity:
 
 truncate:
 	#${BIN} doctrine:query:sql "TRUNCATE measure CASCADE"
-	#${BIN} doctrine:query:sql "TRUNCATE node CASCADE"
+	${BIN} doctrine:query:sql "TRUNCATE node CASCADE"
 	${BIN} doctrine:query:sql "TRUNCATE place CASCADE"
 
 insert-data: truncate
