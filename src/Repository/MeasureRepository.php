@@ -23,10 +23,14 @@ class MeasureRepository extends ServiceEntityRepository
 
     public function save(Measure $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($entity);
+        try {
+            $this->getEntityManager()->persist($entity);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+            if ($flush) {
+                $this->getEntityManager()->flush();
+            }
+        } catch (\Exception $e) {
+            error_log('Hello there : ', $e);
         }
     }
 
