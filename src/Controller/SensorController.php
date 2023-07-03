@@ -19,15 +19,13 @@ class SensorController extends AbstractController
         SensorNormalizer $sensorNormalizer,
         MeasureRepository $measureRepository
     ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
+        $message = json_decode($request->getContent(), true);
 
-        if (!array_key_exists('nodeId', $data)) {
-            return $this->json([
-                'status' => 'erreur',
-                'message' => 'nodeId is missing',
-            ]);
-        }
-        $node = $nodeRepository->find($data['nodeId']);
+        $data = json_decode($message['message'], true);
+
+        $topic = explode('/', $message['topic']);
+        $nodeId = $topic[count($topic) -2];
+        $node = $nodeRepository->find($nodeId);
 
         if (!$node) {
             return $this->json([
@@ -37,7 +35,7 @@ class SensorController extends AbstractController
         }
 
         $measure = $sensorNormalizer->normalize($data, $node);
-
+        
         //create check rules by nodeId (get placeId and maybe groupes)
 
         try {
