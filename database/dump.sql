@@ -1,11 +1,11 @@
 INSERT INTO place ("id", "name", "type", "people_count", "light_state", "warm_state", "clim_state") VALUES
-    ('33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2', 'A104', 'bureau', 0, false, false, false),
+    ('d3b13593-ea5c-4514-85dc-91f8873fe478', 'A104', 'bureau', 0, false, false, false),
+    ('7cebcd19-cd4f-499a-94d7-3fcf63cf01e9', 'A105', 'salle', 0, false, false, false),
+    ('f5893611-b6e9-447b-9c09-12903c0b886c', 'A106', 'salle', 0, false, false, false),
     ('a848cf1a-0e3b-4e89-b6e3-2c7b2163a6f9', 'A107', 'bureau', 0, false, false, false),
     ('67f6e308-7b79-4a7d-9ad9-85a5c24d4db1', 'A108', 'bureau', 0, false, false, false),
     ('efb3b5a7-1f3a-4b4f-a44d-d1c12e9373c0', 'A109', 'bureau', 0, false, false, false),
     ('d583ea32-2c11-4e92-87ef-1b19a59e2e45', 'A110', 'bureau', 0, false, false, false),
-    ('9a03d8c0-bcc7-47cc-937d-68117c1a29d4', 'A105', 'salle', 0, false, false, false),
-    ('247f7519-ba7f-4c77-b3a1-4d682fc2ff8e', 'A106', 'salle', 0, false, false, false),
     ('5e2e4a32-1b3e-4bc6-8b17-0ff1f3c72f6c', 'A111', 'salle', 0, false, false, false),
     ('84d49fc1-2116-47e0-b5c7-60d20c0c37e7', 'A112', 'salle', 0, false, false, false),
     ('6a98b4f8-9e45-4d78-a07f-78db161628b9', 'A113', 'salle', 0, false, false, false),
@@ -15,15 +15,64 @@ INSERT INTO place ("id", "name", "type", "people_count", "light_state", "warm_st
 
 --Pour '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2', A104
 INSERT INTO node ("id", "name", "place_id") VALUES
-    ('a4be12de-12c1-4e29-bd28-7e7e8a1fe765', 'mouvement', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('27c8e1c3-7b95-4967-8e50-83fe12f1463d', 'eau', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('5f16f8e5-85a9-4db3-8f99-ff7b24945d6e', 'co2', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('f918bd4f-84a2-4a72-8361-3d19f732a6ff', 'fumee', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('9df08aae-2ce3-4e0d-aae6-d7288ab0e27c', 'temperature', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('63ebfb3f-8500-45a3-9a48-eb8c4f6d6b2f', 'luminosite', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('e1b625a7-d543-4a19-ae3b-593930440a77', 'relay', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('96b7d125-46f9-4fd1-8a84-5a24db47b31d', 'relay', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2'),
-    ('a9b03f56-908f-4c37-8f64-5d10097f08cd', 'relay', '33f0c468-34bf-4e5e-a2d6-8d90f4a7d1d2');
+    ('152b27fa-1e78-4cda-a3b9-66d592123402', 'co2', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('21780020-e515-4182-a2bd-652cb1c35a57', 'temperature', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('034bd42d-efc9-4a36-9954-2026de06296c', 'luminosity', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('e9a7bc0f-7175-4066-938a-40e7538c6fad', 'humidity', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('86237e63-89cf-45d3-b61a-dc0c592aee09', 'adc', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('ec3ce68c-b315-473e-b7b1-a5f41321a564', 'sound', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('16ce9d75-6a19-43c2-a982-eb6df7bb02e2', 'light', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('27fcd53e-8f2f-4ee0-8eb4-263f9d7642ac', 'vent', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('da6ed2b2-ef56-42ad-9d3b-27b8447eeae5', 'heater', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('9794c6aa-10bc-4998-9480-8206011fadd7', 'voltage', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('41d795e2-eb88-417f-8292-dc4e5b0f1609', 'movement', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('57ac6eca-c1bc-4f3f-95c7-809aafe6306d', 'passage', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('76c69acf-649f-4005-a724-d5ebdb43fe2b', 'ac', 'd3b13593-ea5c-4514-85dc-91f8873fe478'),
+    ('17327887-a7af-4241-bff0-80d713d87d01', 'atmospheric_pressure', 'd3b13593-ea5c-4514-85dc-91f8873fe478');
+
+-- Pour '9a03d8c0-bcc7-47cc-937d-68117c1a29d4' A105
+INSERT INTO node ("id", "name", "place_id") VALUES
+    ('67baa2e4-cc1f-40f8-9f68-17bfc3366bb9', 'co2', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('6cc19be7-3af8-46dd-976f-cbdb544e8c6c', 'temperature', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('2af9597b-b82a-41d7-963a-ae7606bc4306', 'luminosity', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('eeeb9086-9a95-4792-9f25-13e5b46916ba', 'humidity', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('022d8cfa-c1a4-4aa7-b3e1-c45ce27ddcc4', 'adc', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('3a15981e-f45e-4000-9995-0647e179426d', 'sound', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('a3d6bd45-5a64-42e2-9d89-c3b10a65150e', 'light', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('e1140d26-e9d2-4342-9542-e655d0ec2441', 'vent', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('16ad8854-6254-4e27-99b2-71ca4ea51c4e', 'heater', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('400bf734-a93f-4770-8b3b-d7c5fcbb2c54', 'voltage', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('95b409c0-eae0-44d1-90ee-2a425e8c994f', 'movement', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('28b1d692-7f79-4008-b311-c8d2135e9dbd', 'passage', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('8de58053-a110-4306-8827-dd8db73c65d1', 'ac', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9'),
+    ('1bedb318-a3e1-4b4c-a9dd-e75cd073e01c', 'atmospheric_pressure', '7cebcd19-cd4f-499a-94d7-3fcf63cf01e9');
+
+-- Pour '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e' A106
+INSERT INTO node ("id", "name", "place_id") VALUES
+    ('47b51269-8be4-47c9-907e-44a3c145d31e', 'co2', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('426a1cf2-65e9-46ba-a1a8-d950d48214d5', 'temperature', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('64bd8bbe-d3b4-4ddc-99d6-beaa28e05722', 'luminosity', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('0d5e0862-067c-4d6e-a9d3-db9e9e156a61', 'humidity', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('197ed5d5-bf4a-4f06-a3de-aab9378661b2', 'adc', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('0e9ce1ac-010d-4426-ade5-b558c33535a2', 'sound', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('f830308c-86ae-43e2-88e5-0b5fb584040c', 'light', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('123eac3b-f0fe-4218-8d68-780faef072a4', 'vent', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('eb316717-faaa-4592-8e79-b6b703a1538a', 'heater', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('7853d1b0-f390-4278-a49f-2058eb3be81f', 'voltage', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('4a9fd9c2-54f6-4d2d-a717-69f9fbcedda9', 'movement', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('6322871f-dab9-414e-ac34-eb16848f1a08', 'passage', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('86f1af4a-23d7-4824-b576-289a7e2b7864', 'ac', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
+    ('d57ffe67-753e-4de0-9379-7f2d4cfe7f55', 'atmospheric_pressure', 'f5893611-b6e9-447b-9c09-12903c0b886c');
+
+
+
+
+
+
+
+
+
+
 
 -- Pour 'a848cf1a-0e3b-4e89-b6e3-2c7b2163a6f9' A107
 INSERT INTO node ("id", "name", "place_id") VALUES
@@ -73,29 +122,7 @@ INSERT INTO node ("id", "name", "place_id") VALUES
     ('90b5c0a0-8582-48b1-9f95-65d1ed8e2b9f', 'relay', 'd583ea32-2c11-4e92-87ef-1b19a59e2e45'),
     ('ab9f525f-8763-43e6-b036-1b55d97bb8ff', 'relay', 'd583ea32-2c11-4e92-87ef-1b19a59e2e45');
 
--- Pour '9a03d8c0-bcc7-47cc-937d-68117c1a29d4' A105
-INSERT INTO node ("id", "name", "place_id") VALUES
-    ('d8899ec4-4226-4985-bfe7-60df9f168493', 'mouvement', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('25a13675-d2b5-4c2d-ae03-c87d68a0e413', 'eau', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('f7a5dbcc-91b2-4f14-8e85-7e712ee5281c', 'co2', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('352f3b5f-f75e-4197-a9f4-dff74c27ac2d', 'fumee', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('1ae66047-8a0a-4ea6-a57a-262365d9d0f2', 'temperature', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('2b4b73a1-4d7a-4b9a-b348-8ff86a392154', 'luminosite', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('d9e737ad-9b6a-47d1-bf0f-1e0a9ff1a934', 'relay', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('f27e7810-cd1e-4a02-90d2-eeb0d9c6e4c1', 'relay', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4'),
-    ('99402b11-39e2-4579-985f-3059639f956b', 'relay', '9a03d8c0-bcc7-47cc-937d-68117c1a29d4');
 
--- Pour '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e' A106
-INSERT INTO node ("id", "name", "place_id") VALUES
-    ('2f7f27a2-2386-4c22-88e1-c9d1b5a5ddc2', 'mouvement', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('120df616-64a9-46c6-88a6-718e7ce512f1', 'eau', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('136e134b-1403-4393-84c9-0e91862f577f', 'co2', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('7e0e49d9-5c9e-4e1e-9de5-bd1e81e8406e', 'fumee', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('55f804dc-6ae6-4b4a-9f02-51fcf6869422', 'temperature', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('53a21a15-276f-4e1b-9c3b-2eebdcc53e1d', 'luminosite', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('75049b42-33af-45c3-a94a-2626d8c7545d', 'relay', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('6b7d6f6a-80ff-4d53-bf36-7f4df3f97802', 'relay', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e'),
-    ('6942a741-2a36-40b5-bd02-eadce69c8a52', 'relay', '247f7519-ba7f-4c77-b3a1-4d682fc2ff8e');
 
 -- Pour '5e2e4a32-1b3e-4bc6-8b17-0ff1f3c72f6c' A111
 INSERT INTO node ("id", "name", "place_id") VALUES
