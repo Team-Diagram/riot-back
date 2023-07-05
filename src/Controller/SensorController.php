@@ -31,11 +31,12 @@ class SensorController extends AbstractController
             return $this->json([
                 'status' => 'erreur',
                 'message' => 'unknown nodeId',
+                'nodeId' => $nodeId
             ]);
         }
 
         $measure = $sensorNormalizer->normalize($data, $node);
-        
+
         //create check rules by nodeId (get placeId and maybe groupes)
 
         try {
