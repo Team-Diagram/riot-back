@@ -31,13 +31,16 @@ class Place
     private Collection $nodes;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $light_state = null;
+    private ?bool $lightState = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $warm_state = null;
+    private ?int $heaterState = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $clim_state = null;
+    private ?int $acState = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $ventState = null;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
@@ -139,49 +142,78 @@ class Place
 
     public function isLightState(): ?bool
     {
-        return $this->light_state;
+        return $this->lightState;
     }
 
-    public function setLightState(?bool $light_state): self
+    public function setLightState(?bool $lightState): self
     {
-        $this->light_state = $light_state;
+        $this->lightState = $lightState;
 
         return $this;
     }
 
-    public function isWarmState(): ?bool
+    /**
+     * @return int|null
+     */
+    public function getHeaterState(): ?int
     {
-        return $this->warm_state;
+        return $this->heaterState;
     }
 
-    public function setWarmState(?bool $warm_state): self
+    /**
+     * @param int|null $heaterState
+     */
+    public function setHeaterState(?int $heaterState): void
     {
-        $this->warm_state = $warm_state;
-
-        return $this;
+        $this->heaterState = $heaterState;
     }
 
-    public function isClimState(): ?bool
+    /**
+     * @return int|null
+     */
+    public function getAcState(): ?int
     {
-        return $this->clim_state;
+        return $this->acState;
     }
 
-    public function setClimState(?bool $clim_state): self
+    /**
+     * @param int|null $acState
+     */
+    public function setAcState(?int $acState): void
     {
-        $this->clim_state = $clim_state;
-
-        return $this;
+        $this->acState = $acState;
     }
 
+    /**
+     * @return int|null
+     */
+    public function getVentState(): ?int
+    {
+        return $this->ventState;
+    }
+
+    /**
+     * @param int|null $ventState
+     */
+    public function setVentState(?int $ventState): void
+    {
+        $this->ventState = $ventState;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    /**
+     * @param string|null $type
+     */
+    public function setType(?string $type): void
     {
         $this->type = $type;
-
-        return $this;
     }
+
 }

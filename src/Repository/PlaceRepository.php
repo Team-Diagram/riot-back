@@ -39,28 +39,55 @@ class PlaceRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Place[] Returns an array of Place objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function update(Place $place): void
+    {
+        $placeId = $place->getId();
+        $people = $place->getPeopleCount();
+        $isLight = $place->isLightState();
+        $isHeater = $place->getHeaterState();
+        $isVent = $place->getVentState();
+        $isAc = $place->getAcState();
 
-//    public function findOneBySomeField($value): ?Place
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $query = $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.peopleCount', ':people')
+            ->set('p.lightState', ':light')
+            ->set('p.heaterState', ':heater')
+            ->set('p.acState', ':ac')
+            ->set('p.ventState', ':vent')
+            ->where('p.id = :placeId')
+            ->setParameter('people', $people)
+            ->setParameter('light', $isLight)
+            ->setParameter('heater', $isHeater)
+            ->setParameter('ac', $isAc)
+            ->setParameter('vent', $isVent)
+            ->setParameter('placeId', $placeId)
+            ->getQuery();
+        $query->execute();
+    }
+
+    //    /**
+    //     * @return Place[] Returns an array of Place objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Place
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
