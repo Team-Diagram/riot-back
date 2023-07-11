@@ -1,4 +1,4 @@
-INSERT INTO place ("id", "name", "type", "people_count", "light_state", "heater_state", ac_state, vent_state) VALUES
+INSERT INTO place ("id", "name", "type", "people_count", "light_state", "heater_state", "ac_state", "vent_state") VALUES
     ('d3b13593-ea5c-4514-85dc-91f8873fe478', 'A104', 'bureau', 0, false, 0, 0, 0),
     ('7cebcd19-cd4f-499a-94d7-3fcf63cf01e9', 'A105', 'salle', 0, false, 0, 0, 0),
     ('f5893611-b6e9-447b-9c09-12903c0b886c', 'A106', 'salle', 0, false, 0, 0, 0);

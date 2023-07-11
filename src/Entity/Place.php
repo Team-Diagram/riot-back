@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
-class Place
+class Place implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -214,6 +214,18 @@ class Place
     public function setType(?string $type): void
     {
         $this->type = $type;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $reflection = new \ReflectionClass($this);
+        $atts = [];
+
+        foreach ($reflection->getProperties() as $property) {
+            $atts[$property->getName()] = $property->getValue($this);
+        }
+
+        return $atts;
     }
 
 }

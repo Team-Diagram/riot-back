@@ -273,9 +273,7 @@ class Dispatcher
             if ($co2 > 2500) {
                 $notificationMessage = [
                     $measure->getValue(),
-                    'info' => [
-                        'co2Acceptable' => 700,
-                    ],
+                    'info' => 'co2 superieur a 700',
                     'placeId' => $place->getId(),
                 ];
 
@@ -323,9 +321,7 @@ class Dispatcher
 
             $notificationMessage = [
                 $measure->getValue(),
-                'info' => [
-                    'state' => 'fuite d eau',
-                ],
+                'info' => 'fuite d eau',
                 'placeId' => $place->getId(),
             ];
 

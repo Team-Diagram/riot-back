@@ -49,7 +49,7 @@ class Helpers
     ): void {
         $placeId = $place->getId();
 
-        for ($i = 0; $i <= $row; ++$i) {
+        for ($i = 0; $i < $row; $i++) {
             $this->messageHandler->sendMessage($targetNodeId, $placeId, $cmdId);
         }
 
@@ -92,7 +92,7 @@ class Helpers
         if ($place->getHeaterState() > 0) {
             $targetNodeId = $this->getTargetNodeId('heater', $place);
 
-            for ($i = 0; $i <= $place->getheaterState(); ++$i) {
+            for ($i = 0; $i < $place->getheaterState(); $i++) {
                 $this->messageHandler->sendMessage($targetNodeId, $placeId, 202);
             }
 
@@ -102,7 +102,7 @@ class Helpers
         if ($place->getVentState() > 0 && $shutVent) {
             $targetNodeId = $this->getTargetNodeId('vent', $place);
 
-            for ($i = 0; $i <= $place->getVentState(); ++$i) {
+            for ($i = 0; $i < $place->getVentState(); $i++) {
                 $this->messageHandler->sendMessage($targetNodeId, $placeId, 206);
             }
 
@@ -112,7 +112,7 @@ class Helpers
         if ($place->getAcState() > 0) {
             $targetNodeId = $this->getTargetNodeId('ac', $place);
 
-            for ($i = 0; $i <= $place->getAcState(); ++$i) {
+            for ($i = 0; $i < $place->getAcState(); $i++) {
                 $this->messageHandler->sendMessage($targetNodeId, $placeId, 204);
             }
 
