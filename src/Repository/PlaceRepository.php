@@ -77,7 +77,8 @@ class PlaceRepository extends ServiceEntityRepository
 
         $sql = '
             SELECT p.id AS place_id, p.name AS place_name, p.people_count,
-            p.light_state, p.heater_state, p.ac_state, p.vent_state, JSON_AGG(m.value) AS measure_values
+                p.light_state, p.heater_state, p.ac_state,
+                p.vent_state, p.shut_down, JSON_AGG(m.value) AS measure_values
             FROM place p
             JOIN node n ON p.id = n.place_id
             JOIN (
