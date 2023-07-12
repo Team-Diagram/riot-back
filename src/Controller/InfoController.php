@@ -33,11 +33,19 @@ class InfoController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/notification', name: 'notif', methods: 'GET')]
     public function notification(
         NotificationRepository $notificationRepository
     ): JsonResponse {
-        $notif = $notificationRepository->findBy(['opened' => false], ['time' => 'DESC']);
+        $notif = $notificationRepository->getNotification();
+
+        for ($i = 0; $i < count($notif); $i++) {
+            $measureToJson = json_decode($notif[$i]['data']);
+            $notif[$i]['data'] = $measureToJson;
+        }
 
         return $this->json([
             'info' => 'alertes non traitées',

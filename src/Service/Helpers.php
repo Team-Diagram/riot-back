@@ -12,6 +12,7 @@ use App\Repository\NotificationRepository;
 use App\Repository\PlaceRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use function Symfony\Component\Clock\now;
 
 class Helpers
 {
@@ -70,9 +71,14 @@ class Helpers
 
     public function saveNotification($message): void
     {
-        $notification = new Notification();
-        $notification->setMessage($message);
-        $this->notificationRepository->save($notification, true);
+        try {
+            $notification = new Notification();
+            $notification->setMessage($message);
+            $notification->setTime(now());
+            $this->notificationRepository->save($notification, true);
+        } catch (\Exception $e) {
+            $this->logger->error($e);
+        }
     }
 
     /**

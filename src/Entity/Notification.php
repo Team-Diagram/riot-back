@@ -23,7 +23,7 @@ class Notification implements \JsonSerializable
     #[ORM\Column(options: ['default' => false])]
     private ?bool $opened = false;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $time = null;
 
     public function getId(): ?Uuid

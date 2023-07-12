@@ -270,9 +270,9 @@ class Dispatcher
                 $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
             }
 
-            if ($co2 > 2500) {
+            if ($co2 > 2000) {
                 $notificationMessage = [
-                    $measure->getValue(),
+                    'co2' => $co2,
                     'info' => 'co2 superieur a 700',
                     'placeId' => $place->getId(),
                 ];
@@ -320,7 +320,7 @@ class Dispatcher
             $this->helpers->shutAllDown($place, true);
 
             $notificationMessage = [
-                $measure->getValue(),
+                'adc' => $measure->getValue()['adc'],
                 'info' => 'fuite d eau',
                 'placeId' => $place->getId(),
             ];
