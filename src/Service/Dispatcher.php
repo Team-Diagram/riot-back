@@ -77,8 +77,9 @@ class Dispatcher
         $place = $measure->getNode()->getPlace();
         $place->setPeopleCount($persons);
 
-        if (0 === $persons) {
-            $this->helpers->shutAllDown($place);
+        if (0 === $persons || $place->isShutDown()) {
+            $shutVent = $place->isShutDown();
+            $this->helpers->shutAllDown($place, $shutVent);
         }
         try {
             $this->placeRepository->update($place);
@@ -87,54 +88,39 @@ class Dispatcher
         }
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     private function heaterRule(Measure $measure): void
     {
         $heater = $measure->getValue()['heat'];
         $place = $measure->getNode()->getPlace();
-        $placeId = $place->getId();
 
         if ($place->getHeaterState() !== $heater) {
-            $cmdId = $place->getHeaterState() > $heater ? 201 : 202;
-            $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
+            $place->setHeaterState($heater);
 
-            $this->messageHandler->sendMessage($targetNodeId, $placeId, $cmdId);
+            $this->placeRepository->update($place);
         }
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     private function acRule(Measure $measure): void
     {
         $ac = $measure->getValue()['ac'];
         $place = $measure->getNode()->getPlace();
-        $placeId = $place->getId();
 
         if ($place->getAcState() !== $ac) {
-            $cmdId = $place->getAcState() > $ac ? 203 : 204;
-            $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
+            $place->setAcState($ac);
 
-            $this->messageHandler->sendMessage($targetNodeId, $placeId, $cmdId);
+            $this->placeRepository->update($place);
         }
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     private function ventRule(Measure $measure): void
     {
         $vent = $measure->getValue()['vent'];
         $place = $measure->getNode()->getPlace();
-        $placeId = $place->getId();
 
         if ($place->getVentState() !== $vent) {
-            $cmdId = $place->getVentState() > $vent ? 205 : 206;
-            $targetNodeId = $this->helpers->getTargetNodeId('vent', $place);
+            $place->setVentState($vent);
 
-            $this->messageHandler->sendMessage($targetNodeId, $placeId, $cmdId);
+            $this->placeRepository->update($place);
         }
     }
 
@@ -164,120 +150,122 @@ class Dispatcher
             $place = $measure->getNode()->getPlace();
             $targetNodeId = $this->helpers->getTargetNodeId('vent', $place);
 
-            if ($co2 > 3000 || $place->getPeopleCount() >= 45) {
-                if (12 === $place->getVentState()) {
-                    return;
+            if (!$place->isShutDown()) {
+                if ($co2 > 3000 || $place->getPeopleCount() >= 45) {
+                    if (12 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 12) {
+                        $row = $place->getVentState() - 12;
+                        $cmdId = 206;
+                    } else {
+                        $row = 12 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(12);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($co2 > 2700 || $place->getPeopleCount() >= 40) {
+                    if (10 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 10) {
+                        $row = $place->getVentState() - 10;
+                        $cmdId = 206;
+                    } else {
+                        $row = 10 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(10);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($co2 > 2500 || $place->getPeopleCount() >= 32) {
+                    if (8 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 8) {
+                        $row = $place->getVentState() - 8;
+                        $cmdId = 206;
+                    } else {
+                        $row = 8 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(8);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($co2 > 2200 || $place->getPeopleCount() >= 27) {
+                    if (6 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 6) {
+                        $row = $place->getVentState() - 6;
+                        $cmdId = 206;
+                    } else {
+                        $row = 6 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(6);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($co2 > 2000 || $place->getPeopleCount() >= 20) {
+                    if (5 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 5) {
+                        $row = $place->getVentState() - 5;
+                        $cmdId = 206;
+                    } else {
+                        $row = 5 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(5);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($co2 > 1500 || $place->getPeopleCount() >= 15) {
+                    if (3 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 3) {
+                        $row = $place->getVentState() - 3;
+                        $cmdId = 206;
+                    } else {
+                        $row = 3 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(3);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($co2 > 1000 || $place->getPeopleCount() >= 7) {
+                    if (2 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 2) {
+                        $row = $place->getVentState() - 2;
+                        $cmdId = 206;
+                    } else {
+                        $row = 2 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(2);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                } elseif ($place->getPeopleCount() > 0) {
+                    if (1 === $place->getVentState()) {
+                        return;
+                    }
+                    if ($place->getVentState() > 1) {
+                        $row = $place->getVentState() - 1;
+                        $cmdId = 206;
+                    } else {
+                        $row = 1 - $place->getVentState();
+                        $cmdId = 205;
+                    }
+                    $place->setVentState(1);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                 }
-                if ($place->getVentState() > 12) {
-                    $row = $place->getVentState() - 12;
-                    $cmdId = 206;
-                } else {
-                    $row = 12 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(12);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($co2 > 2700 || $place->getPeopleCount() >= 40) {
-                if (10 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 10) {
-                    $row = $place->getVentState() - 10;
-                    $cmdId = 206;
-                } else {
-                    $row = 10 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(10);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($co2 > 2500 || $place->getPeopleCount() >= 32) {
-                if (8 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 8) {
-                    $row = $place->getVentState() - 8;
-                    $cmdId = 206;
-                } else {
-                    $row = 8 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(8);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($co2 > 2200 || $place->getPeopleCount() >= 27) {
-                if (6 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 6) {
-                    $row = $place->getVentState() - 6;
-                    $cmdId = 206;
-                } else {
-                    $row = 6 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(6);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($co2 > 2000 || $place->getPeopleCount() >= 20) {
-                if (5 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 5) {
-                    $row = $place->getVentState() - 5;
-                    $cmdId = 206;
-                } else {
-                    $row = 5 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(5);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($co2 > 1500 || $place->getPeopleCount() >= 15) {
-                if (3 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 3) {
-                    $row = $place->getVentState() - 3;
-                    $cmdId = 206;
-                } else {
-                    $row = 3 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(3);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($co2 > 1000 || $place->getPeopleCount() >= 7) {
-                if (2 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 2) {
-                    $row = $place->getVentState() - 2;
-                    $cmdId = 206;
-                } else {
-                    $row = 2 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(2);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            } elseif ($place->getPeopleCount() > 0) {
-                if (1 === $place->getVentState()) {
-                    return;
-                }
-                if ($place->getVentState() > 1) {
-                    $row = $place->getVentState() - 1;
-                    $cmdId = 206;
-                } else {
-                    $row = 1 - $place->getVentState();
-                    $cmdId = 205;
-                }
-                $place->setVentState(1);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            }
 
-            if ($co2 > 2000) {
-                $notificationMessage = [
-                    'co2' => $co2,
-                    'info' => 'co2 superieur a 700',
-                    'placeId' => $place->getId(),
-                ];
+                if ($co2 > 2000) {
+                    $notificationMessage = [
+                        'co2' => $co2,
+                        'info' => 'co2 superieur a 700',
+                        'placeId' => $place->getId(),
+                    ];
 
-                $this->helpers->saveNotification($notificationMessage);
+                    $this->helpers->saveNotification($notificationMessage);
+                }
             }
 
             if (
@@ -318,6 +306,7 @@ class Dispatcher
         $place = $measure->getNode()->getPlace();
         if ($measure->getValue()['adc'] >= 1) {
             $this->helpers->shutAllDown($place, true);
+            $place->setShutDown(true);
 
             $notificationMessage = [
                 'adc' => $measure->getValue()['adc'],
@@ -343,192 +332,209 @@ class Dispatcher
         $place = $measure->getNode()->getPlace();
         $temperature = $measure->getValue()['temperature'];
 
-        if ($temperature > 27 && $place->getPeopleCount() > 0) {
-            try {
-                $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
-                if ($place->getPeopleCount() >= 40) {
-                    if (6 === $place->getAcState()) {
-                        return;
+        if (!$place->isShutDown()) {
+            if ($temperature > 27 && $place->getPeopleCount() > 0) {
+                try {
+                    $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
+                    if ($place->getPeopleCount() >= 40) {
+                        if (6 === $place->getAcState()) {
+                            return;
+                        }
+
+                        if ($place->getAcState() > 6) {
+                            $row = $place->getAcState() - 6;
+                            $cmdId = 204;
+                        } else {
+                            $row = 6 - $place->getAcState();
+                            $cmdId = 203;
+                        }
+                        $place->setAcState(6);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 32) {
+                        if (5 === $place->getAcState()) {
+                            return;
+                        }
+
+                        if ($place->getAcState() > 5) {
+                            $row = $place->getAcState() - 5;
+                            $cmdId = 204;
+                        } else {
+                            $row = 5 - $place->getAcState();
+                            $cmdId = 203;
+                        }
+                        $place->setAcState(5);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 24) {
+                        if (4 === $place->getAcState()) {
+                            return;
+                        }
+
+                        if ($place->getAcState() > 4) {
+                            $row = $place->getAcState() - 4;
+                            $cmdId = 204;
+                        } else {
+                            $row = 4 - $place->getAcState();
+                            $cmdId = 203;
+                        }
+                        $place->setAcState(4);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 16) {
+                        if (3 === $place->getAcState()) {
+                            return;
+                        }
+
+                        if ($place->getAcState() > 3) {
+                            $row = $place->getAcState() - 3;
+                            $cmdId = 204;
+                        } else {
+                            $row = 3 - $place->getAcState();
+                            $cmdId = 203;
+                        }
+                        $place->setAcState(3);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 8) {
+                        if (2 === $place->getAcState()) {
+                            return;
+                        }
+
+                        if ($place->getAcState() > 2) {
+                            $row = $place->getAcState() - 2;
+                            $cmdId = 204;
+                        } else {
+                            $row = 2 - $place->getAcState();
+                            $cmdId = 203;
+                        }
+                        $place->setAcState(2);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() > 0) {
+                        if (1 === $place->getAcState()) {
+                            return;
+                        }
+
+                        if ($place->getAcState() > 1) {
+                            $row = $place->getAcState() - 1;
+                            $cmdId = 204;
+                        } else {
+                            $row = 1 - $place->getAcState();
+                            $cmdId = 203;
+                        }
+                        $place->setAcState(1);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                     }
 
-                    if ($place->getAcState() > 6) {
-                        $row = $place->getAcState() - 6;
-                        $cmdId = 204;
-                    } else {
-                        $row = 6 - $place->getAcState();
-                        $cmdId = 203;
-                    }
-                    $place->setAcState(6);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 32) {
-                    if (5 === $place->getAcState()) {
-                        return;
+                    if ($place->getAcState() > 0 && $place->getHeaterState() > 0) {
+                        $row = $place->getHeaterState();
+                        $cmdId = 202;
+                        $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
+
+                        $place->setHeaterState(0);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                     }
 
-                    if ($place->getAcState() > 5) {
-                        $row = $place->getAcState() - 5;
-                        $cmdId = 204;
-                    } else {
-                        $row = 5 - $place->getAcState();
-                        $cmdId = 203;
-                    }
-                    $place->setAcState(5);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 24) {
-                    if (4 === $place->getAcState()) {
-                        return;
-                    }
-
-                    if ($place->getAcState() > 4) {
-                        $row = $place->getAcState() - 4;
-                        $cmdId = 204;
-                    } else {
-                        $row = 4 - $place->getAcState();
-                        $cmdId = 203;
-                    }
-                    $place->setAcState(4);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 16) {
-                    if (3 === $place->getAcState()) {
-                        return;
-                    }
-
-                    if ($place->getAcState() > 3) {
-                        $row = $place->getAcState() - 3;
-                        $cmdId = 204;
-                    } else {
-                        $row = 3 - $place->getAcState();
-                        $cmdId = 203;
-                    }
-                    $place->setAcState(3);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 8) {
-                    if (2 === $place->getAcState()) {
-                        return;
-                    }
-
-                    if ($place->getAcState() > 2) {
-                        $row = $place->getAcState() - 2;
-                        $cmdId = 204;
-                    } else {
-                        $row = 2 - $place->getAcState();
-                        $cmdId = 203;
-                    }
-                    $place->setAcState(2);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() > 0) {
-                    if (1 === $place->getAcState()) {
-                        return;
-                    }
-
-                    if ($place->getAcState() > 1) {
-                        $row = $place->getAcState() - 1;
-                        $cmdId = 204;
-                    } else {
-                        $row = 1 - $place->getAcState();
-                        $cmdId = 203;
-                    }
-                    $place->setAcState(1);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    $this->placeRepository->update($place);
+                } catch (\Exception $e) {
+                    $this->logger->error($e);
                 }
-
-                if ($place->getAcState() > 0 && $place->getHeaterState() > 0) {
-                    $row = $place->getHeaterState();
-                    $cmdId = 202;
-                    $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
-
-                    $place->setHeaterState(0);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                }
-
-                $this->placeRepository->update($place);
-            } catch (\Exception $e) {
-                $this->logger->error($e);
             }
-        }
 
-        if ($temperature < 19 && $place->getPeopleCount() > 0) {
-            try {
-                $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
-                if ($place->getPeopleCount() >= 30 && $place->getHeaterState() > 0) {
-                    $row = $place->getHeaterState();
-                    $cmdId = 202;
-
-                    $place->setHeaterState(0);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 25) {
-                    if (1 === $place->getHeaterState()) {
-                        return;
-                    }
-
-                    if ($place->getHeaterState() > 1) {
-                        $row = $place->getHeaterState() - 1;
+            if ($temperature < 19 && $place->getPeopleCount() > 0) {
+                try {
+                    $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
+                    if ($place->getPeopleCount() >= 30 && $place->getHeaterState() > 0) {
+                        $row = $place->getHeaterState();
                         $cmdId = 202;
-                    } else {
-                        $row = 1 - $place->getHeaterState();
-                        $cmdId = 201;
-                    }
-                    $place->setHeaterState(1);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 20) {
-                    if (2 === $place->getHeaterState()) {
-                        return;
+
+                        $place->setHeaterState(0);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 25) {
+                        if (1 === $place->getHeaterState()) {
+                            return;
+                        }
+
+                        if ($place->getHeaterState() > 1) {
+                            $row = $place->getHeaterState() - 1;
+                            $cmdId = 202;
+                        } else {
+                            $row = 1 - $place->getHeaterState();
+                            $cmdId = 201;
+                        }
+                        $place->setHeaterState(1);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 20) {
+                        if (2 === $place->getHeaterState()) {
+                            return;
+                        }
+
+                        if ($place->getHeaterState() > 2) {
+                            $row = $place->getHeaterState() - 2;
+                            $cmdId = 202;
+                        } else {
+                            $row = 2 - $place->getHeaterState();
+                            $cmdId = 201;
+                        }
+                        $place->setHeaterState(2);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 15) {
+                        if (3 === $place->getHeaterState()) {
+                            return;
+                        }
+
+                        if ($place->getHeaterState() > 3) {
+                            $row = $place->getHeaterState() - 3;
+                            $cmdId = 202;
+                        } else {
+                            $row = 3 - $place->getHeaterState();
+                            $cmdId = 201;
+                        }
+                        $place->setHeaterState(3);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() >= 10) {
+                        if (4 === $place->getHeaterState()) {
+                            return;
+                        }
+
+                        if ($place->getHeaterState() > 4) {
+                            $row = $place->getHeaterState() - 4;
+                            $cmdId = 202;
+                        } else {
+                            $row = 4 - $place->getHeaterState();
+                            $cmdId = 201;
+                        }
+                        $place->setHeaterState(4);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    } elseif ($place->getPeopleCount() > 0) {
+                        if (5 === $place->getHeaterState()) {
+                            return;
+                        }
+
+                        if ($place->getHeaterState() > 5) {
+                            $row = $place->getHeaterState() - 5;
+                            $cmdId = 202;
+                        } else {
+                            $row = 5 - $place->getHeaterState();
+                            $cmdId = 201;
+                        }
+                        $place->setHeaterState(5);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                     }
 
-                    if ($place->getHeaterState() > 2) {
-                        $row = $place->getHeaterState() - 2;
-                        $cmdId = 202;
-                    } else {
-                        $row = 2 - $place->getHeaterState();
-                        $cmdId = 201;
-                    }
-                    $place->setHeaterState(2);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 15) {
-                    if (3 === $place->getHeaterState()) {
-                        return;
+                    if ($place->getAcState() > 0 && $place->getHeaterState() > 0) {
+                        $row = $place->getAcState();
+                        $cmdId = 204;
+                        $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
+
+                        $place->setAcState(0);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                     }
 
-                    if ($place->getHeaterState() > 3) {
-                        $row = $place->getHeaterState() - 3;
-                        $cmdId = 202;
-                    } else {
-                        $row = 3 - $place->getHeaterState();
-                        $cmdId = 201;
-                    }
-                    $place->setHeaterState(3);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() >= 10) {
-                    if (4 === $place->getHeaterState()) {
-                        return;
-                    }
-
-                    if ($place->getHeaterState() > 4) {
-                        $row = $place->getHeaterState() - 4;
-                        $cmdId = 202;
-                    } else {
-                        $row = 4 - $place->getHeaterState();
-                        $cmdId = 201;
-                    }
-                    $place->setHeaterState(4);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                } elseif ($place->getPeopleCount() > 0) {
-                    if (5 === $place->getHeaterState()) {
-                        return;
-                    }
-
-                    if ($place->getHeaterState() > 5) {
-                        $row = $place->getHeaterState() - 5;
-                        $cmdId = 202;
-                    } else {
-                        $row = 5 - $place->getHeaterState();
-                        $cmdId = 201;
-                    }
-                    $place->setHeaterState(5);
-                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    $this->placeRepository->update($place);
+                } catch (\Exception $e) {
+                    $this->logger->error($e);
                 }
+            }
 
-                if ($place->getAcState() > 0 && $place->getHeaterState() > 0) {
+            if ($temperature > 19 && $temperature < 27 && $place->getPeopleCount() > 0) {
+                if ($place->getAcState() > 0) {
                     $row = $place->getAcState();
                     $cmdId = 204;
                     $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
@@ -537,29 +543,14 @@ class Dispatcher
                     $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                 }
 
-                $this->placeRepository->update($place);
-            } catch (\Exception $e) {
-                $this->logger->error($e);
-            }
-        }
+                if ($place->getHeaterState() > 0) {
+                    $row = $place->getHeaterState();
+                    $cmdId = 202;
+                    $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
 
-        if ($temperature > 19 && $temperature < 27 && $place->getPeopleCount() > 0) {
-            if ($place->getAcState() > 0) {
-                $row = $place->getAcState();
-                $cmdId = 204;
-                $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
-
-                $place->setAcState(0);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-            }
-
-            if ($place->getHeaterState() > 0) {
-                $row = $place->getHeaterState();
-                $cmdId = 202;
-                $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
-
-                $place->setHeaterState(0);
-                $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    $place->setHeaterState(0);
+                    $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                }
             }
         }
     }

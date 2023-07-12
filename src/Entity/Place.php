@@ -45,6 +45,9 @@ class Place implements \JsonSerializable
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $shutDown = false;
+
     public function __construct()
     {
         $this->plannings = new ArrayCollection();
@@ -152,65 +155,41 @@ class Place implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getHeaterState(): ?int
     {
         return $this->heaterState;
     }
 
-    /**
-     * @param int|null $heaterState
-     */
     public function setHeaterState(?int $heaterState): void
     {
         $this->heaterState = $heaterState;
     }
 
-    /**
-     * @return int|null
-     */
     public function getAcState(): ?int
     {
         return $this->acState;
     }
 
-    /**
-     * @param int|null $acState
-     */
     public function setAcState(?int $acState): void
     {
         $this->acState = $acState;
     }
 
-    /**
-     * @return int|null
-     */
     public function getVentState(): ?int
     {
         return $this->ventState;
     }
 
-    /**
-     * @param int|null $ventState
-     */
     public function setVentState(?int $ventState): void
     {
         $this->ventState = $ventState;
     }
 
-    /**
-     * @return string|null
-     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string|null $type
-     */
     public function setType(?string $type): void
     {
         $this->type = $type;
@@ -228,4 +207,15 @@ class Place implements \JsonSerializable
         return $atts;
     }
 
+    public function isShutDown(): ?bool
+    {
+        return $this->shutDown;
+    }
+
+    public function setShutDown(bool $shutDown): self
+    {
+        $this->shutDown = $shutDown;
+
+        return $this;
+    }
 }
