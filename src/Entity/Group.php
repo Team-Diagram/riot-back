@@ -11,7 +11,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: GroupRepository::class)]
 #[ORM\Table(name: '`group`')]
-class Group
+class Group implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -75,5 +75,17 @@ class Group
         }
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $reflection = new \ReflectionClass($this);
+        $atts = [];
+
+        foreach ($reflection->getProperties() as $property) {
+            $atts[$property->getName()] = $property->getValue($this);
+        }
+
+        return $atts;
     }
 }

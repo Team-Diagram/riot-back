@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Measure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -43,6 +44,44 @@ class MeasureRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function getVoltage(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT value -> \'kwh\' AS kwh, time, id
+            FROM measure
+            WHERE value -> \'kwh\' IS NOT NULL
+            ORDER BY time DESC;
+        ';
+
+        $resultSet = $conn->executeQuery($sql);
+
+        return $resultSet->fetchAllAssociative();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getVoltageByNodeId($nodeId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT value -> \'kwh\' AS kwh, time, id
+            FROM measure
+            WHERE value -> \'kwh\' IS NOT NULL
+            AND node_id = :nodeId
+            ORDER BY time DESC;
+        ';
+
+        $resultSet = $conn->executeQuery($sql, ['nodeId' => $nodeId]);
+
+        return $resultSet->fetchAllAssociative();
+    }
 //    /**
 //     * @return Measure[] Returns an array of Measure objects
 //     */

@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: NodeMetaRepository::class)]
-class NodeMeta
+class NodeMeta implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -65,5 +65,17 @@ class NodeMeta
         $this->node = $node;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $reflection = new \ReflectionClass($this);
+        $atts = [];
+
+        foreach ($reflection->getProperties() as $property) {
+            $atts[$property->getName()] = $property->getValue($this);
+        }
+
+        return $atts;
     }
 }

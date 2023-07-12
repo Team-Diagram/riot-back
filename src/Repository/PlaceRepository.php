@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -64,6 +65,33 @@ class PlaceRepository extends ServiceEntityRepository
             ->setParameter('placeId', $placeId)
             ->getQuery();
         $query->execute();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAllLastMeasureForEveryPlace(): array
+    {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT p.id AS place_id, p.name AS place_name, p.people_count,
+            p.light_state, p.heater_state, p.ac_state, p.vent_state, JSON_AGG(m.value) AS measure_values
+            FROM place p
+            JOIN node n ON p.id = n.place_id
+            JOIN (
+                SELECT value, node_id
+                FROM measure
+                ORDER BY measure.time DESC
+                LIMIT 42
+            ) AS m ON m.node_id = n.id
+            GROUP BY p.id, p.name, p.people_count, p.light_state, p.heater_state, p.ac_state, p.vent_state;
+        ';
+
+        $resultSet = $conn->executeQuery($sql);
+
+        return $resultSet->fetchAllAssociative();
     }
 
     //    /**
