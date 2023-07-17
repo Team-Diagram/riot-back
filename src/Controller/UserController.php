@@ -160,7 +160,7 @@ class UserController extends AbstractController
         $userRepository->save($user, true);
     
         return new JsonResponse([
-            'status' => 'success', 
+            'status' => 'success',
             'message' => 'user updated'
         ]);
     }
