@@ -17,15 +17,15 @@ class SwitchController extends AbstractController
     #[Route('/api/switch/vent', name: 'app_switch_vent', methods:['POST'])]
     public function vent(Request $request,PlaceRepository $place,Helpers $helper): JsonResponse
     {
-        $max_value = 12;
+        $maxValue = 12;
         $data = json_decode($request->getContent(), true);
-        $place_id = $data['place_id'];
+        $placeId = $data['place_id'];
         $value = $data['value'];
-        $place = $place->find($place_id);
+        $place = $place->find($placeId);
         $nodeId = $helper->getTargetNodeId('vent',$place);
 
-        if($value > $max_value){
-            $value = $max_value;
+        if($value > $maxValue){
+            $value = $maxValue;
         }
 
         if($value === $place->getVentState()){
@@ -54,15 +54,15 @@ class SwitchController extends AbstractController
     #[Route('/api/switch/climatisation', name: 'app_switch_climatisation', methods:['POST'])]
     public function clim(Request $request,PlaceRepository $place,Helpers $helper): JsonResponse
     {
-        $max_value = 6;
+        $maxValue = 6;
         $data = json_decode($request->getContent(), true);
-        $place_id = $data['place_id'];
+        $placeId = $data['place_id'];
         $value = $data['value'];
-        $place = $place->find($place_id);
+        $place = $place->find($placeId);
         $nodeId = $helper->getTargetNodeId('ac',$place);
 
-        if($value > $max_value){
-            $value = $max_value;
+        if($value > $maxValue){
+            $value = $maxValue;
         }
 
         if($value === $place->getAcState()){
@@ -91,15 +91,15 @@ class SwitchController extends AbstractController
     #[Route('/api/switch/heater', name: 'app_switch_heater', methods:['POST'])]
     public function heater(Request $request,PlaceRepository $place,Helpers $helper): JsonResponse
     {
-        $max_value = 6;
+        $maxValue = 6;
         $data = json_decode($request->getContent(), true);
-        $place_id = $data['place_id'];
+        $placeId = $data['place_id'];
         $value = $data['value'];
-        $place = $place->find($place_id);
+        $place = $place->find($placeId);
         $nodeId = $helper->getTargetNodeId('heating',$place);
 
-        if($value > $max_value){
-            $value = $max_value;
+        if($value > $maxValue){
+            $value = $maxValue;
         }
 
         if($value === $place->getHeaterState()){
