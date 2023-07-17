@@ -55,3 +55,13 @@ INSERT INTO node ("id", "name", "place_id") VALUES
     ('6322871f-dab9-414e-ac34-eb16848f1a08', 'passage', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
     ('86f1af4a-23d7-4824-b576-289a7e2b7864', 'ac', 'f5893611-b6e9-447b-9c09-12903c0b886c'),
     ('d57ffe67-753e-4de0-9379-7f2d4cfe7f55', 'atmospheric_pressure', 'f5893611-b6e9-447b-9c09-12903c0b886c');
+
+-- User
+
+INSERT INTO "user" ("id", "email", "roles", "password", "first_name", "last_name", "admin") VALUES
+    ('01896406-f234-7860-a596-5e8ef6acec55', 'sarah@admin.com', '["ROLE_ADMIN"]', '$2y$13$h4Fh37q0OxDqboIivm2M4uP.k8y5wryGUXOdvFL27GEo1lx9GzDlK', 'Sarah', 'Aziza', true),
+    ('01896407-2e07-7753-bc70-2fe05353b57a', 'markjohnson@gmail.com', '["ROLE_USER"]', '$2y$13$YshhjbpAJR.hPK2sSXhz2Oq/JiZEQ22Kmze9By8jkk/RKOX0XSqAK', 'Mark', 'Johnson', false),
+    ('01896407-5650-7e03-9aea-2acb9ecb2867', 'janesmith@gmail.com', '["ROLE_USER"]', '$2y$13$tzr5Ma4CFWJy7pn27EKtK.JpWD/ubb9QvQwgXRbSLoCFrGkGw2.V6', 'Jane', 'Smith', false),
+    ('01896407-84bb-72c6-abc5-49e001a836aa', 'johndoe@gmail.com', '["ROLE_USER"]', '$2y$13$jluAw6MSJuhriXkXBxauZeYUKj5yx7OuUFrbhmah1meTjG7tYAVg6', 'John', 'Doe', false),
+    ('01896407-ad44-7364-9fb9-6ac866426555', 'bob@admin.com', '["ROLE_ADMIN"]', '$2y$13$SknQo9QbN4ex2uaqZmVE..zENB/pMsB2TIIIfUeuXsUaBW3PbSW3q', 'Bob', 'Sinclair', true),
+    ('01896407-db3a-7116-934a-3c718f5e12ba', 'alice@admin.com', '["ROLE_ADMIN"]', '$2y$13$sE5TGUFxlEgYzAVREd8DkOYaYkxL0nCQbIy1oWctdroVwImdz0xdO', 'Alice', 'Land', true);
