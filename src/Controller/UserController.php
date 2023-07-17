@@ -6,25 +6,25 @@ use App\Entity\User;
 use Symfony\Component\Uid\Uuid;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * controller des users
  */
 class UserController extends AbstractController
 {
-
     /**
      * @param Request $request
      * @param UserRepository $userRepository
      * @param UserPasswordHasherInterface $passwordHasher
      * @return JsonResponse
      */
-    #[Route('/user', name:'add_user', methods:['PUT'])]
+    #[Route('/api/user', name:'add_user', methods:['POST'])]
+    #[IsGranted('ROLE_ADMIN', message: 'No access!')]
     public function create(
         Request $request,
         UserRepository $userRepository,
@@ -50,10 +50,12 @@ class UserController extends AbstractController
         try{
             $userRepository->save($user,true);
             return $this->json([
+                'status' => 'success',
                 'message' => 'Success add user',
             ]);
         }catch(\Exception $e){
                 return $this->json([
+                'status' => 'error',
                 'message' => $e->getMessage(),
             ]);
         }
@@ -65,7 +67,7 @@ class UserController extends AbstractController
      * @param UserRepository $userRepository
      * @return JsonResponse
      */
-    #[Route('/user/one/{id}', name: 'get_user_Id',methods:['GET'])]
+    #[Route('/api/user/one/{id}', name: 'get_user_Id',methods:['GET'])]
     public function getUserById(Uuid $id, UserRepository $userRepository): JsonResponse
     {
         $user = $userRepository->find($id);
@@ -81,7 +83,7 @@ class UserController extends AbstractController
      * @param UserRepository $userRepository
      * @return JsonResponse
      */
-    #[Route('/user/all', name:'get_user_all', methods:['GET'])]
+    #[Route('/api/user/all', name:'get_user_all', methods:['GET'])]
     public function getAllUser(UserRepository $userRepository): JsonResponse
     {
         $users = $userRepository->findAll();
@@ -97,27 +99,14 @@ class UserController extends AbstractController
 
         return new JsonResponse($serializedUser);
     }
-    
-    /**
-     * 
-     * @return JsonResponse
-     */
-    #[Route('/protectedRoute/example', name:'protected_route_example', methods:['GET'])]
-    public function protectedRouteExample(): JsonResponse
-    {
-
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        return new JsonResponse(['message' => 'test']);
-    }
-
 
     /**
      * @param Request $request
      * @param UserRepository $userRepository
      * @return JsonResponse
      */
-    #[Route('/user/by', name:'get_admin_user', methods:['GET'])]
-    public function getByAdmin(Request $request,UserRepository $userRepository): JsonResponse
+    #[Route('/api/user/by', name:'get_admin_user', methods:['GET'])]
+    public function getByParams(Request $request,UserRepository $userRepository): JsonResponse
     {   
 
         $key = $request->query->keys()[0];
@@ -147,6 +136,7 @@ class UserController extends AbstractController
      */
 
     #[Route('/user/update/{id}', name:'update_user', methods:['PUT'])]
+    #[IsGranted('ROLE_ADMIN', message: 'No access!')]
     public function updateUser(Uuid $id,Request $request,UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): JsonResponse
     {   
         $user = $userRepository->find($id);
@@ -166,7 +156,10 @@ class UserController extends AbstractController
     
         $userRepository->save($user, true);
     
-        return new JsonResponse(['status' => 'user updated!']);
+        return new JsonResponse([
+            'status' => 'success', 
+            'message' => 'user updated'
+        ]);
     }
 
 
@@ -175,12 +168,15 @@ class UserController extends AbstractController
      * @param UserRepository $userRepository
      * @return JsonResponse
      */
-    #[Route('/user/delete/{id}', name:'delete_user', methods:['DELETE'])]
+    #[Route('/api/user/delete/{id}', name:'delete_user', methods:['DELETE'])]
+    #[IsGranted('ROLE_ADMIN', message: 'No access!')]
     public function deleteUser(Uuid $id,UserRepository $userRepository): JsonResponse
     {   
         $user = $userRepository->find($id);
         $userRepository->remove($user, true);
     
-        return new JsonResponse(['status' => 'user deleted']);
+        return new JsonResponse([
+        'status' => 'success',
+        'message' => 'user deleted']);
     }
 }
