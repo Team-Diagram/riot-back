@@ -43,7 +43,8 @@ class Helpers
     /**
      * @throws TransportExceptionInterface
      */
-    public function variatorHandler(Place $place,
+    public function variatorHandler(
+        Place $place,
         int $row,
         string $targetNodeId,
         int $cmdId,
