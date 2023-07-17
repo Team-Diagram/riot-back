@@ -13,30 +13,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SecurityController extends AbstractController
 {
-    #[Route('/login', name: 'app_login',methods:['POST'])]
-    public function login(): JsonResponse
-    {
-        $user = $this->getUser();
 
-        if (!$user) {
-            return $this->json([
-                'message' => 'No user found',
-            ], 404);
-        }
-
-        //Pour récupérer l'uuid
-        $uuid = $user->getId();
-        $uid = $uuid instanceof UuidV7 ? $uuid->toRfc4122() : null;
-
-        return $this->json([
-            'id' => $uid,
-            'email' => $user->getEmail(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'role' => $user->getRoles(),
-        ]);
-    }
-
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/logout', name: 'app_logout')]
     public function logout():JsonResponse
     {
