@@ -72,7 +72,6 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function getAllLastMeasureForEveryPlace(): array
     {
-
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
@@ -95,28 +94,31 @@ class PlaceRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    //    /**
-    //     * @return Place[] Returns an array of Place objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @throws Exception
+     */
+    public function getAllLastMeasureByPlace($placeId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
 
-    //    public function findOneBySomeField($value): ?Place
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $sql = '
+            SELECT p.id AS place_id, p.name AS place_name, p.people_count,
+                p.light_state, p.heater_state, p.ac_state,
+                p.vent_state, p.shut_down, JSON_AGG(m.value) AS measure_values
+            FROM place p
+            JOIN node n ON p.id = n.place_id
+            JOIN (
+                SELECT value, node_id
+                FROM measure
+                ORDER BY measure.time DESC
+                LIMIT 42
+            ) AS m ON m.node_id = n.id
+            WHERE p.id = :placeId
+            GROUP BY p.id, p.name, p.people_count, p.light_state, p.heater_state, p.ac_state, p.vent_state;
+        ';
+
+        $resultSet = $conn->executeQuery($sql, ['placeId' => $placeId]);
+
+        return $resultSet->fetchAllAssociative();
+    }
 }

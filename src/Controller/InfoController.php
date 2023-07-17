@@ -18,7 +18,7 @@ class InfoController extends AbstractController
      * @throws Exception
      */
     #[Route('/states', name: 'states', methods: 'GET')]
-    public function index(
+    public function states(
         PlaceRepository $placeRepository,
     ): JsonResponse {
         $placeState = $placeRepository->getAllLastMeasureForEveryPlace();
@@ -30,6 +30,25 @@ class InfoController extends AbstractController
         return $this->json([
             'info' => 'etat des salles',
             'message' => $placeState,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/state/{placeId}', name: 'stateByPlace', methods: 'GET')]
+    public function stateByPlace(
+        PlaceRepository $placeRepository,
+        $placeId
+    ): JsonResponse {
+        $placeState = $placeRepository->getAllLastMeasureByPlace($placeId);
+
+        $measureToJson = json_decode($placeState[0]['measure_values']);
+        $placeState[0]['measure_values'] = $measureToJson;
+
+        return $this->json([
+            'info' => "etat de la salle $placeId",
+            'message' => $placeState[0],
         ]);
     }
 
