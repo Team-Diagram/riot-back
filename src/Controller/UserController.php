@@ -12,11 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+$MESSAGE_API = 'No access!';
 /**
  * controller des users
  */
 class UserController extends AbstractController
 {
+    const ACCESS_DENIED_MESSAGE = 'No access!';
+    
     /**
      * @param Request $request
      * @param UserRepository $userRepository
@@ -24,7 +27,7 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     #[Route('/api/user', name:'add_user', methods:['POST'])]
-    #[IsGranted('ROLE_ADMIN', message: 'No access!')]
+    #[IsGranted('ROLE_ADMIN', message: self::ACCESS_DENIED_MESSAGE)]
     public function create(
         Request $request,
         UserRepository $userRepository,
@@ -136,7 +139,7 @@ class UserController extends AbstractController
      */
 
     #[Route('/user/update/{id}', name:'update_user', methods:['PUT'])]
-    #[IsGranted('ROLE_ADMIN', message: 'No access!')]
+    #[IsGranted('ROLE_ADMIN', message: self::ACCESS_DENIED_MESSAGE)]
     public function updateUser(Uuid $id,Request $request,UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): JsonResponse
     {   
         $user = $userRepository->find($id);
@@ -169,7 +172,7 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     #[Route('/api/user/delete/{id}', name:'delete_user', methods:['DELETE'])]
-    #[IsGranted('ROLE_ADMIN', message: 'No access!')]
+    #[IsGranted('ROLE_ADMIN', message: self::ACCESS_DENIED_MESSAGE)]
     public function deleteUser(Uuid $id,UserRepository $userRepository): JsonResponse
     {   
         $user = $userRepository->find($id);
