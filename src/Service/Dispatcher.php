@@ -333,7 +333,7 @@ class Dispatcher
         $temperature = $measure->getValue()['temperature'];
 
         if (!$place->isShutDown()) {
-            if ($temperature > 27 && $place->getPeopleCount() > 0) {
+            if ($temperature >= 26 && $place->getPeopleCount() > 0) {
                 try {
                     $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
                     if ($place->getPeopleCount() >= 40) {
