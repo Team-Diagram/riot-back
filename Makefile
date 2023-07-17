@@ -63,6 +63,7 @@ truncate:
 	#${BIN} doctrine:query:sql "TRUNCATE measure CASCADE"
 	${BIN} doctrine:query:sql "TRUNCATE node CASCADE"
 	${BIN} doctrine:query:sql "TRUNCATE place CASCADE"
+	${BIN} doctrine:query:sql "TRUNCATE \"user\" CASCADE"
 
 insert-data: truncate
 	${EXEC} -i ${DB_NAME} psql -U riot -d RIOT < database/dump.sql
