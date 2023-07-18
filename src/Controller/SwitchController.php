@@ -124,4 +124,39 @@ class SwitchController extends AbstractController
             'message'=> $message
         ]);
     }
+
+    #[Route('/api/switchAll/{action}',name:'app_switch_all',methods:['POST'])]
+    public function shutdown (Request $request,PlaceRepository $placeRepository,Helpers $helper,$action){
+        $data = json_decode($request->getContent(), true);
+        $placesId = $data['place_id'];
+
+        $active = true;
+        if($action==='shutdown'){
+            $active = false;
+        }
+
+        foreach($placesId as $placeId){
+            $place = $placeRepository->find($placeId);    
+            $place->setShutDown($active);
+            if(!$active){
+                $helper->shutAllDown($place,true);
+            }
+            $placeRepository->update($place);
+        }
+    }
+
+    #[Route('/switch/light', name: 'app_switch_light', methods:['POST'])]
+    public function light(Request $request,PlaceRepository $placeRepository,Helpers $helper):JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $placeId = $data['place_id'];
+        $place = $placeRepository->find($placeId);
+
+        $helper->toggleLight($place);
+
+        return $this->json([
+            'status' => self::SUCCESS,
+            'message'=> "Lumiere modifiee"
+        ]);
+    }
 }

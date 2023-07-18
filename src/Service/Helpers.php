@@ -58,6 +58,21 @@ class Helpers
         $this->placeRepository->update($place);
     }
 
+    public function toggleLight(Place $place): void
+    {
+        $placeId = $place->getId();
+        $targetNodeId = $this->getTargetNodeId('light', $place);
+        $place->setLightState(!$place->isLightState());
+
+        if ($place->isLightState()) {
+            $this->messageHandler->sendMessage($targetNodeId, $placeId, 207);
+        } else {
+            $this->messageHandler->sendMessage($targetNodeId, $placeId, 208);
+        }
+
+        $this->placeRepository->update($place);
+    }
+
     public function getTargetNodeId(string $name, Place $place, bool $entity = false): string|Node
     {
         $params = ['place' => $place, 'name' => $name];
