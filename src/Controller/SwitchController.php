@@ -136,7 +136,7 @@ class SwitchController extends AbstractController
         }
 
         foreach($placesId as $placeId){
-            $place = $placeRepository->find($placeId);    
+            $place = $placeRepository->find($placeId);
             $place->setShutDown($active);
             if(!$active){
                 $helper->shutAllDown($place,true);
