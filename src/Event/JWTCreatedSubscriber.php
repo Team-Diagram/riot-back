@@ -21,10 +21,10 @@ class JWTCreatedSubscriber implements EventSubscriberInterface
         $data = $event->getData();
 
         $user = $this->tokenStorage->getToken()->getUser();
-        $username = $user instanceof UserInterface ? $user->getLastName() : '';
+        $lastName = $user instanceof UserInterface ? $user->getLastName() : '';
 
         // Ajoutez le nom de l'utilisateur au tableau $data
-        $data['username'] = $username;
+        $data['lastName'] = $lastName;
 
         $event->setData($data);
     }
