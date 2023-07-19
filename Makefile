@@ -1,5 +1,5 @@
 CONTAINER_PATH:=/var/www
-DOCKER_COMPOSE:=docker compose
+DOCKER_COMPOSE:=docker-compose
 UP:=up -d --build
 DOWN:=stop
 CONTAINER_NAME:=riot_back
