@@ -335,6 +335,15 @@ class Dispatcher
         if (!$place->isShutDown()) {
             if ($temperature >= 26 && $place->getPeopleCount() > 0) {
                 try {
+                    if ($place->getHeaterState() > 0) {
+                        $row = $place->getHeaterState();
+                        $cmdId = 202;
+                        $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
+
+                        $place->setHeaterState(0);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    }
+
                     $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
                     if ($place->getPeopleCount() >= 40) {
                         if (6 === $place->getAcState()) {
@@ -422,15 +431,6 @@ class Dispatcher
                         $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                     }
 
-                    if ($place->getAcState() > 0 && $place->getHeaterState() > 0) {
-                        $row = $place->getHeaterState();
-                        $cmdId = 202;
-                        $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
-
-                        $place->setHeaterState(0);
-                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                    }
-
                     $this->placeRepository->update($place);
                 } catch (\Exception $e) {
                     $this->logger->error($e);
@@ -439,6 +439,15 @@ class Dispatcher
 
             if ($temperature < 19 && $place->getPeopleCount() > 0) {
                 try {
+                    if ($place->getAcState() > 0) {
+                        $row = $place->getAcState();
+                        $cmdId = 204;
+                        $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
+
+                        $place->setAcState(0);
+                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
+                    }
+
                     $targetNodeId = $this->helpers->getTargetNodeId('heater', $place);
                     if ($place->getPeopleCount() >= 30 && $place->getHeaterState() > 0) {
                         $row = $place->getHeaterState();
@@ -515,15 +524,6 @@ class Dispatcher
                             $cmdId = 201;
                         }
                         $place->setHeaterState(5);
-                        $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
-                    }
-
-                    if ($place->getAcState() > 0 && $place->getHeaterState() > 0) {
-                        $row = $place->getAcState();
-                        $cmdId = 204;
-                        $targetNodeId = $this->helpers->getTargetNodeId('ac', $place);
-
-                        $place->setAcState(0);
                         $this->helpers->variatorHandler($place, $row, $targetNodeId, $cmdId);
                     }
 
