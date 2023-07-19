@@ -20,5 +20,3 @@ RUN curl -sS https://get.symfony.com/cli/installer -o installer.sh \
 ADD /.server-conf/000-default.conf /etc/apache2/sites-available/
 
 WORKDIR /var/www
-
-CMD ["sh", "-c", "chown -R www-data:www-data /var/www && chmod -R 775 /var/www"]
