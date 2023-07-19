@@ -16,5 +16,8 @@ RUN curl -sS https://get.symfony.com/cli/installer -o installer.sh \
     && rm installer.sh \
     && mv /root/.symfony5/bin/symfony /usr/local/bin
 
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 /var/www
+
 ADD /.server-conf/000-default.conf /etc/apache2/sites-available/
 WORKDIR /var/www
