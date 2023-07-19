@@ -6,18 +6,24 @@ use App\Entity\User;
 use Symfony\Component\Uid\Uuid;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 $MESSAGE_API = 'No access!';
 /**
  * controller des users
  */
 class UserController extends AbstractController
-{
+{   
+    public function __construct(JWTTokenManagerInterface $jwtManager)
+    {
+        $this->jwtManager = $jwtManager;
+    }
     const ACCESS_DENIED_MESSAGE = 'No access!';
     
     /**
@@ -138,13 +144,14 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
 
-    #[Route('/user/update/{id}', name:'update_user', methods:['PUT'])]
+    #[Route('/api/user/update/{id}', name:'update_user', methods:['PUT'])]
     #[IsGranted('ROLE_ADMIN', message: self::ACCESS_DENIED_MESSAGE)]
-    public function updateUser(Uuid $id,Request $request,UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): JsonResponse
+    public function updateUser(Uuid $id,Request $request,Security $security,UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): JsonResponse
     {   
         $user = $userRepository->find($id);
         $data = json_decode($request->getContent(), true);
-    
+        $isCurrentUser = $user === $security->getUser();
+
         foreach ($data as $field => $value) {
             if ($field === 'password') {
                 $hashedPassword = $passwordHasher->hashPassword($user, $value);
@@ -158,10 +165,17 @@ class UserController extends AbstractController
         }
     
         $userRepository->save($user, true);
-    
+
+        $newToken = null;
+        if ($isCurrentUser) {
+            // Générer un nouveau JWT pour l'utilisateur connecté
+            $newToken = $this->jwtManager->create($user);
+        }
+        
         return new JsonResponse([
             'status' => 'success',
-            'message' => 'user updated'
+            'message' => 'user updated',
+            'token' => $newToken,
         ]);
     }
 
