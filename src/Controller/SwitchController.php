@@ -91,12 +91,13 @@ class SwitchController extends AbstractController
     #[Route('/api/switch/heater', name: 'app_switch_heater', methods:['POST'])]
     public function heater(Request $request,PlaceRepository $place,Helpers $helper): JsonResponse
     {
+        
         $maxValue = 6;
         $data = json_decode($request->getContent(), true);
         $placeId = $data['place_id'];
         $value = $data['value'];
         $place = $place->find($placeId);
-        $nodeId = $helper->getTargetNodeId('heating',$place);
+        $nodeId = $helper->getTargetNodeId('heater',$place);
 
         if($value > $maxValue){
             $value = $maxValue;
