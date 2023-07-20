@@ -209,7 +209,7 @@ POST /switch/light
 ---
 ShutDown all device or TurnOn all device
 ```http
-POST api/switchAll/:action
+POST /api/switchAll/:action
 ```
 #### Necessary :
 `` ROLE_ADMIN``
@@ -227,7 +227,7 @@ POST api/switchAll/:action
 ## Methods PUT
 ### USER
 #### Update User
-```
+```http
 PUT /api/user/update/:userId
 ```
 #### Necessary :
@@ -250,7 +250,7 @@ PUT /api/user/update/:userId
 ---
 ## Methods DELETE
 ### Delete User
-```
+```http
 DELETE /api/user/delete/:userId
 ```
 #### Necessary :
