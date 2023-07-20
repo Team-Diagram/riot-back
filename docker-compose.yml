@@ -4,7 +4,7 @@ services:
   php:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: riot_back
     ports:
       - '8787:80'
