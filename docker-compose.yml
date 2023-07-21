@@ -4,20 +4,21 @@ services:
   php:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: riot_back
     ports:
       - '8787:80'
+      - '8585:8585'
     restart: unless-stopped
     volumes:
       - ./:/var/www
 
   db:
     image: postgres:15
-    container_name: db_riot
+    container_name: riot-db-container
     restart: always
     environment:
-      POSTGRES_DB: RIOT
+      POSTGRES_DB: riot_db
       POSTGRES_USER: riot
       POSTGRES_PASSWORD: riot
     volumes:
