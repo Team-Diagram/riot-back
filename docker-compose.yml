@@ -15,10 +15,10 @@ services:
 
   db:
     image: postgres:15
-    container_name: db_riot
+    container_name: riot-db-container
     restart: always
     environment:
-      POSTGRES_DB: RIOT
+      POSTGRES_DB: riot_db
       POSTGRES_USER: riot
       POSTGRES_PASSWORD: riot
     volumes:
